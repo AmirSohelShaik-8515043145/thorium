@@ -36,7 +36,11 @@ router.post("/voting-post", function (req, res) {
   for (let i = 0; i < persons.length; i++) {
 
     if (persons[i].age > votingAge) {
-      persons[i].votingStatus = true
+      persons[i].votingStatus = true;
+      newArray.push(persons[i])
+    }
+    else{
+      persons[i].votingStatus = false;
       newArray.push(persons[i])
     }
   }
@@ -44,7 +48,7 @@ router.post("/voting-post", function (req, res) {
     return res.send(newArray)
   }
   else {
-    return res.send("There is no voter found above this age.")
+    return res.send("There is no voter found.")
   }
 })
 

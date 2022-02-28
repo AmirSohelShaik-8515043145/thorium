@@ -1,55 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const UserModel= require("../models/userModel.js")
+const UserController= require("../controllers/userController")
 
-let persons = [
-  {
-    name: "Amir",
-    age: 10,
-    votingStatus: false
-  },
-  {
-    name: "Sohel",
-    age: 25,
-    votingStatus: false
-  },
-  {
-    name: "Rajesh",
-    age: 70,
-    votingStatus: false
-  },
-  {
-    name: "Siraj",
-    age: 18,
-    votingStatus: false
-  },
-  {
-    name: "Samrat",
-    age: 28,
-    votingStatus: false
-  }
-]
-
-router.post("/voting-post", function (req, res) {
-  let votingAge = req.query.votingAge
-
-  let newArray = [];
-  for (let i = 0; i < persons.length; i++) {
-
-    if (persons[i].age > votingAge) {
-      persons[i].votingStatus = true;
-      newArray.push(persons[i])
-    }
-    else{
-      persons[i].votingStatus = false;
-      newArray.push(persons[i])
-    }
-  }
-  if (newArray.length > 0) {
-    return res.send(newArray)
-  }
-  else {
-    return res.send("There is no voter found.")
-  }
+router.get("/test-me", function (req, res) {
+    res.send("My first ever api!")
 })
+
+router.post("/createUser", UserController.createUser  )
+
+router.get("/getUsersData", UserController.getUsersData)
 
 module.exports = router;

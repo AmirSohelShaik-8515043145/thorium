@@ -2,13 +2,7 @@ const BookModel = require('../models/bookModel')
 const AuthorModel = require('../models/authorModel')
 
 
-const createBook = async function(req, res){
-let bookData = req.body
-
-let book = await BookModel.create(bookData)
-res.send({msg: book})
-
-}
+//Problem 1: Create author with different id
 
 const createAuthor = async function(req, res){
     let authorData = req.body
@@ -17,6 +11,19 @@ const createAuthor = async function(req, res){
     res.send({msg: author})
     
 }
+
+//Problem 2: Create a book schema of those author
+
+const createBook = async function(req, res){
+let bookData = req.body
+
+let book = await BookModel.create(bookData)
+res.send({msg: book})
+
+}
+
+//Problem 3: Collect all books by Chetan Bhagat
+
 const bookByChetan = async function (req, res){
 
     let authorDetails = await AuthorModel.findOne({author_name : "Chetan Bhagat"})
@@ -26,6 +33,8 @@ const bookByChetan = async function (req, res){
     res.send({bookByChetan: chetanBook })
 
 } 
+
+//Problem 4: Update Price of the book "two states"
 
 const priceUpdate = async function (req, res){
     let update = req.body
@@ -41,6 +50,9 @@ const priceUpdate = async function (req, res){
 
     
 }
+
+// Problem 5: find all author name by books price
+
  
 const booksInPrice = async function(req,res){
 

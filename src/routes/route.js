@@ -1,14 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const Controller= require("../controller/controller")
+const express=require('express');
+const router=express.Router();
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+const userController=require('../controllers/userController');
+const productController=require('../controllers/productController');
+const orderController=require('../controllers/orderController');
+const { middleware } = require('../middleware/middleware');
 
-router.get("/test-1", Controller.testOne)
-router.get("/test-2", Controller.testTwo)
+router.post('/createUser',middleware,userController.createUser);
+router.post('/createOrder',middleware,orderController.createOrder);
+router.post('/createProduct', productController.createProduct);
 
-
-
-module.exports = router;
+module.exports=router;

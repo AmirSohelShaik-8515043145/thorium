@@ -18,6 +18,4 @@ router.put("/users/:userId",authNew, userController.updateUser)
 
 router.delete("/users/:userId",auth,userController.deleteUser)
 
-router.post("/users/:userId/post",authNew,userController.postMessage)
-
 module.exports = router;

@@ -8,10 +8,7 @@ const userSchema = new mongoose.Schema( {
 
         required: true
     },
-    emailId: {
-        type:String,
-        unique:true
-    },
+    emailId: String,
     password: String,
     gender: {
         type: String,
@@ -23,9 +20,19 @@ const userSchema = new mongoose.Schema( {
         default:false
     },
     posts: {
-        type:[],
-        default:[]
+        type:String,
     }
  }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema)
+
+// {
+//     "firstName" : "Sabiha",
+//     "lastName" : "Khan",
+//     "mobile" : "9898909087",
+//     "emailId" : "sk@gmail.com",
+//     "password" : "password123",
+//     "gender" : "female",
+// 	"isDeleted": false, //default value is false 
+//     "age" : 12,
+// }

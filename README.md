@@ -1,6 +1,6 @@
 # Thorium
 
-## Project - Books Management
+## Project-Books_Management
 
 ### Key points
 - Create a group database `groupXDatabase`. You can clean the db you previously used and resue that.

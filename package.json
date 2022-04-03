@@ -1,7 +1,7 @@
 {
-  "name": "project-books-management",
+  "name": "project-books_management",
   "version": "1.0.0",
-  "description": "- Create a group database `groupXDatabase`. You can clean the db you previously used and resue that.\r - This time each group should have a *single git branch*. Coordinate amongst yourselves by ensuring every next person pulls the code last pushed by a team mate. You branch will be checked as part of the demo. Branch name should follow the naming convention `project/booksManagementGroupX`\r - Follow the naming conventions exactly as instructed.",
+  "description": "- Create a group database `group19Database`. You can clean the db you previously used and resue that.\r - This time each group should have a *single git branch*. Coordinate amongst yourselves by ensuring every next person pulls the code last pushed by a team mate. You branch will be checked as part of the demo. Branch name should follow the naming convention `project/booksManagementGroupX`\r - Follow the naming conventions exactly as instructed.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AmirSohelShaik-8515043145/Project-Books-Management.git"
+    "url": "git+https://github.com/AmirSohelShaik-8515043145/Project-Books_Management.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AmirSohelShaik-8515043145/Project-Books-Management/issues"
+    "url": "https://github.com/AmirSohelShaik-8515043145/Project-Books_Management/issues"
   },
-  "homepage": "https://github.com/AmirSohelShaik-8515043145/Project-Books-Management#readme",
+  "homepage": "https://github.com/AmirSohelShaik-8515043145/Project-Books_Management#readme",
   "dependencies": {
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",

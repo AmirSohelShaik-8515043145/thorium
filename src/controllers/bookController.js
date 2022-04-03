@@ -16,6 +16,7 @@ let createBook = async function (req, res) {
         if (!validator.isValid(data.category)) { return res.status(400).send({ status: false, message: "Category Is Required" }) }
         if (!validator.isValid(data.subcategory)) { return res.status(400).send({ status: false, message: "Subcategory Is Required" }) }
 
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(data.userId.trim()))) { return res.status(400).send({ status: false, message: "You should have put correct User Id" }) }
 
         const duplicteTitle = await booksModel.findOne({ title: data.title })
         if (duplicteTitle) { return res.status(404).send({ status: false, message: "title already exists, title must be unique" }) }
@@ -38,7 +39,7 @@ let getBook = async function (req, res) {
     try {
 
         const data = req.query
-        const book = await booksModel.find(data, { isDeleted: false }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).collation({ locale: "en" }).sort({ title: 1 })
+        const book = await booksModel.find({$and:[data, { isDeleted: false }]}).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).collation({ locale: "en" }).sort({ title: 1 })
         if (book.length === 0) {
             return res.status(404).send({ status: false, message: "No book found according to your search" })
         }
@@ -50,17 +51,42 @@ let getBook = async function (req, res) {
 }
 
 
+
+// GET BOOK WITH REVIEW BY ID---------------------------
+
+const getBooksById = async function (req, res) {
+    try {
+        let bookId = req.params.bookId;
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(bookId.trim()))) { return res.status(400).send({ status: false, message: "You should have put correct book Id" }) }
+
+        let books = await booksModel.findOne({ _id: bookId, isDeleted: false });
+        if (!books) return res.status(404).send({ status: false, message: "No book found according to your search" })
+
+        let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+        let bookWithReviews = JSON.parse(JSON.stringify(books));
+        bookWithReviews.reviewsData = reviews
+
+        return res.status(200).send({ status: true, message: 'Books list', totalReviews: reviews.length, data: bookWithReviews });
+    }
+    catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+    }
+}
+
+
+
 //UPDATE BOOK----------------------------------------
 
 const updateBooks = async (req, res) => {
     try {
         let bookId = req.params.bookId;
         let data = req.body
+
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(bookId.trim()))) { return res.status(400).send({ status: false, message: "You should have put correct book Id" }) }
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Pls, provide some data to update." }) }
 
         let book = await booksModel.findById(bookId)
         if (!book) { return res.status(400).send({ status: false, msg: "No book find with this id, Check your id." }) }
-        // if ((book!=dataDup)&&dataDup) return res.status(400).send({ status: false, msg: "title cannot be duplicate" })
 
         let dataDup = await booksModel.findOne({ title: data.title })
         if (dataDup) { return res.status(400).send({ status: false, msg: "title cannot be duplicate" }) }
@@ -80,40 +106,20 @@ const updateBooks = async (req, res) => {
 }
 
 
-// GET BOOK WITH REVIEW BY ID---------------------------
-
-const getBooksById = async function (req, res) {
-    try {
-        let bookId = req.params.bookId;
-
-        let books = await booksModel.findOne({ _id: bookId }, { isDeleted: false });
-        if (!books) return res.status(404).send({ status: false, message: "No book found according to your search" })
-
-        let reviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
-        let bookWithReviews = JSON.parse(JSON.stringify(books));
-        bookWithReviews.reviewsData = reviews
-
-        return res.status(200).send({ status: true, message: 'Books list', totalReviews: reviews.length, data: bookWithReviews });
-    }
-    catch (error) {
-        res.status(500).send({ status: false, error: error.message })
-    }
-}
-
-
 
 // DELETE BOOK----------------------------------------
 
 let deleteBook = async function (req, res) {
     try {
         let bookId = req.params.bookId
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(bookId.trim()))) { return res.status(400).send({ status: false, message: "You should have put correct book Id to delete the book" }) }
 
         let book = await booksModel.findById(bookId)
         if (!book) { return res.status(404).send({ status: false, message: "Which book you want to delete is not found" }) }
         if (book.isDeleted == true) { return res.status(400).send({ status: false, msg: "Books has already been deleted" }) }
 
         let deletedBooks = await booksModel.findOneAndUpdate({ _id: bookId },
-            { $set: { isDeleted:true} }, { new: true })
+            { $set: { isDeleted: true } }, { new: true })
         return res.status(201).send({ status: true, msg: "Book Deleted Successfully" })
     }
     catch (err) { return res.status(500).send({ status: false, message: err.message }) }
@@ -122,9 +128,9 @@ let deleteBook = async function (req, res) {
 
 
 module.exports = {
-    getBooksById,
     createBook,
     getBook,
+    getBooksById,
     updateBooks,
     deleteBook
 }

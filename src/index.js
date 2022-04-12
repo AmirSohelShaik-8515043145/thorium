@@ -2,10 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const route = require('./route/route.js');
 const { default: mongoose } = require('mongoose');
+const multer =require('multer')
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer().any())
 
 mongoose.connect("mongodb+srv://amir-thorium:NSE7ZdUlu4no9WRF@cluster0.gchuo.mongodb.net/Book-Management-DataBase?authSource=admin&replicaSet=atlas-cw2o95-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true", {
     useNewUrlParser: true

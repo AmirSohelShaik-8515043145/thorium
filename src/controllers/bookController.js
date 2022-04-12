@@ -1,6 +1,7 @@
 const booksModel = require('../models/booksModel');
 const validator = require("../validator/validator")
 const reviewModel = require("../models/reviewModel")
+const aws = require("../aws/aws")
 
 
 //CREATE BOOK----------------------------------------
@@ -23,10 +24,24 @@ let createBook = async function (req, res) {
         const duplicateISBN = await booksModel.findOne({ ISBN: data.ISBN })
         if (duplicateISBN) { return res.status(404).send({ status: false, message: "ISBN already exists, ISBN must be unique" }) }
 
-        let savedData = await booksModel.create(data)
-        res.status(201).send({ status: true, msg: 'created book sucssesfully', data: savedData })
+
+        const files = req.files;
+        if (files) {
+            const uploadedFiles = [];
+            for (const file of files) {
+                const fileRes = await aws.uploadFile(file);
+                uploadedFiles.push(fileRes.Location);
+            }
+            data.bookCover = uploadedFiles;
+            const insertRes = await booksModel.create(data);
+            return res.status(201).send({ status: true, message: 'Book created successfully !', data: insertRes });
+        }
+
+        // let savedData = await booksModel.create(data)
+        // res.status(201).send({ status: true, msg: 'created book sucssesfully', data: savedData })
     }
     catch (error) {
+        console.log(error)
         return res.status(500).send({ msg: error.message })
     }
 }
@@ -39,7 +54,7 @@ let getBook = async function (req, res) {
     try {
 
         const data = req.query
-        const book = await booksModel.find({$and:[data, { isDeleted: false }]}).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).collation({ locale: "en" }).sort({ title: 1 })
+        const book = await booksModel.find({ $and: [data, { isDeleted: false }] }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).collation({ locale: "en" }).sort({ title: 1 })
         if (book.length === 0) {
             return res.status(404).send({ status: false, message: "No book found according to your search" })
         }

@@ -11,7 +11,7 @@ const middleware = require('../middleware/middleware')
 router.post("/register", userController.createUser)
 router.post("/login", loginController.login)
 
-router.post("/book", middleware.authentication, bookController.createBook)
+router.post("/book", /*middleware.authentication,*/ bookController.createBook)
 router.get("/books", middleware.authentication, bookController.getBook)
 router.get("/books/:bookId", middleware.authentication, bookController.getBooksById)
 router.put("/books/:bookId", middleware.authentication, middleware.authorization, bookController.updateBooks)

@@ -27,18 +27,18 @@ let createBook = async function (req, res) {
 
         const files = req.files;
         if (files) {
-            const uploadedFiles = [];
+            let uploadedFiles = [];
             for (const file of files) {
                 const fileRes = await aws.uploadFile(file);
                 uploadedFiles.push(fileRes.Location);
             }
             data.bookCover = uploadedFiles;
-            const insertRes = await booksModel.create(data);
-            return res.status(201).send({ status: true, message: 'Book created successfully !', data: insertRes });
+            // const insertRes = await booksModel.create(data);
+            // return res.status(201).send({ status: true, message: 'Book created successfully !', data: insertRes });
         }
 
-        // let savedData = await booksModel.create(data)
-        // res.status(201).send({ status: true, msg: 'created book sucssesfully', data: savedData })
+        let savedData = await booksModel.create(data)
+        res.status(201).send({ status: true, msg: 'Book created sucssesfully', data: savedData })
     }
     catch (error) {
         console.log(error)
